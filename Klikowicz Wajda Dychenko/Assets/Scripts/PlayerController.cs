@@ -85,6 +85,15 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("MovingPlatform"))
+        {
+            transform.SetParent(null);
+        }
+
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Bonus"))
@@ -105,8 +114,15 @@ public class PlayerController : MonoBehaviour
                 Death();
                 
             }
+        }
+
+
+        if (other.CompareTag("MovingPlatform"))
+        {
+            transform.SetParent(other.transform);
 
         }
+
 
         if (other.CompareTag("Key"))
         {

@@ -10,6 +10,7 @@ TagManager:
   - Heart
   - Exit
   - FallLevel
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX
