@@ -25,10 +25,6 @@ public class PlayerController : MonoBehaviour
 
     private bool isWalking = false;
 
-    private int score = 0;
-
-    private int keysFound = 0;
-    private int keysNumber = 3;
 
     [SerializeField]
     private LayerMask groundLayer;
@@ -98,8 +94,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Bonus"))
         {
-            score++;
-            Debug.Log("Score: " + score);
+            GameManager.instance.AddPoints(1);
             other.gameObject.SetActive(false);
         }
 
@@ -107,7 +102,7 @@ public class PlayerController : MonoBehaviour
         {
             if (transform.position.y > other.gameObject.transform.position.y)
             {
-                score++;
+ 
                 Debug.Log("Killed an enemy");
             }else
             {
@@ -126,7 +121,7 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Key"))
         {
-            keysFound++;
+            GameManager.instance.AddKeys();
             other.gameObject.SetActive(false);
         }
 
@@ -137,7 +132,7 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
         }
 
-        if (other.CompareTag("Exit") && keysFound == keysNumber)
+        if (other.CompareTag("Exit") && GameManager.instance.CollectedAllKeys())
         {
             Debug.Log("You WIn");
         }
@@ -159,37 +154,39 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-         isWalking = false;
-
-        
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
-            jump();
-
-
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        if (GameManager.instance.isPause())
         {
-            transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
-            isWalking = true;
-            if (isFacingRight == false)
+            isWalking = false;
+
+
+            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+                jump();
+
+
+            if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
-                Flip();
+                transform.Translate(moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+                isWalking = true;
+                if (isFacingRight == false)
+                {
+                    Flip();
+                }
             }
-        }
 
 
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
-        {
-            transform.Translate(-moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
-            isWalking = true;
-            if (isFacingRight == true)
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
-                Flip();
+                transform.Translate(-moveSpeed * Time.deltaTime, 0.0f, 0.0f, Space.World);
+                isWalking = true;
+                if (isFacingRight == true)
+                {
+                    Flip();
+                }
             }
+
+            animator.SetBool("isGrounded", isGrounded());
+            animator.SetBool("isWalking", isWalking);
         }
-
-        animator.SetBool("isGrounded", isGrounded());
-        animator.SetBool("isWalking", isWalking);
-
 
 
         // Debug.DrawRay(transform.position, rayLength * Vector3.down, Color.white, 1, false);
