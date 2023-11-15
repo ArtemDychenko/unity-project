@@ -18,14 +18,29 @@ public class GameManager : MonoBehaviour
 
     public TMP_Text scoreText;
 
+    public TMP_Text timerText;
+
+    public TMP_Text preyCounterText;
+
     private int score = 0;
 
     public Image[] keysTab = new Image [3];
 
+    public Image[] liveTab = new Image[3];
+
+    private float timer = 0;
+
     private int keysFound = 0;
 
     private int keysNumber = 3;
-    
+
+
+    public int preyCounter = 0;
+
+    public int maxLives = 3;
+
+    public int lives = 3;
+
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +51,13 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Escape))
+        if (!isPause())
+            UpdateTimer();
+
+        ColorLives();
+        UpdatePreyCounter();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (currentGameState == GameState.GS_PASEMENU) InGame();
             else if (currentGameState == GameState.GS_GAME) PauseMenu();
@@ -59,9 +80,39 @@ public class GameManager : MonoBehaviour
         keysFound++;
     }
 
+    public void AddLive()
+    {
+        lives++;
+    }
+
+    public void RemoveLive()
+    {
+        lives--;
+    }
+
+    private void UpdatePreyCounter()
+    {
+        preyCounterText.text = preyCounter.ToString();
+    }
+
+    private void ColorLives()
+    {
+        for(int i = 0; i < maxLives; i++)
+        {
+            liveTab[i].color = lives >= i + 1 ? Color.white : Color.gray;
+        }
+    }
+
     public bool CollectedAllKeys()
     {
         return keysFound == keysNumber;
+    }
+
+    public void UpdateTimer()
+    {
+        timer += Time.deltaTime;
+        int seconds = (int)(timer);
+        timerText.text = string.Format("{0:00}:{1:00}", seconds / 60, seconds % 60);
     }
 
     public void AddPoints(int points)
@@ -80,6 +131,7 @@ public class GameManager : MonoBehaviour
     {
         currentGameState = newGameState;
         if (newGameState == GameState.GS_GAME) inGameCanvas.enabled=true;
+        if (newGameState == GameState.GS_PASEMENU) inGameCanvas.enabled = false;
     }
     public void PauseMenu()
     {

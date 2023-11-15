@@ -54,6 +54,9 @@ public class MovingPlatformController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.instance.isPause())
+            return;
+
         float posX = transform.position.x;
         if (isMovingRight)
         {

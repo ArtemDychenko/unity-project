@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
 
     private bool isFacingRight = true;
 
-    private int lives = 3;
 
     private Vector2 startPosition;
 
@@ -66,15 +65,14 @@ public class PlayerController : MonoBehaviour
 
     private void Death()
     {
-        lives--;
-        if (lives == 0)
+        GameManager.instance.RemoveLive();
+        if (GameManager.instance.lives == 0)
         {
             Debug.Log("Koniec gry");
             transform.Translate(0.0f, -1232132131.0f, 0.0f, Space.World);
         }
         else
         {
-            Debug.Log(lives);
             transform.position = startPosition;
 
         }
@@ -102,7 +100,7 @@ public class PlayerController : MonoBehaviour
         {
             if (transform.position.y > other.gameObject.transform.position.y)
             {
- 
+                GameManager.instance.preyCounter++;
                 Debug.Log("Killed an enemy");
             }else
             {
@@ -127,7 +125,7 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Heart"))
         {
-            lives++;
+            GameManager.instance.AddLive();
             Debug.Log("Acquired live");
             other.gameObject.SetActive(false);
         }
@@ -154,7 +152,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.instance.isPause())
+        if (!GameManager.instance.isPause())
         {
             isWalking = false;
 
