@@ -132,6 +132,8 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Exit") && GameManager.instance.CollectedAllKeys())
         {
+            GameManager.instance.AddPoints(100 * GameManager.instance.getLives());
+            GameManager.instance.LevelCompleted();
             Debug.Log("You WIn");
         }
 
