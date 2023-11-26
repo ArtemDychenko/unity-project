@@ -7,7 +7,7 @@ using System;
 using TMPro;
 
 
-public enum GameState { GS_PASEMENU, GS_GAME, GS_LEVELCOMPLETED, GS_GAME_OVER}
+public enum GameState { GS_PASEMENU, GS_GAME, GS_LEVELCOMPLETED, GS_GAME_OVER, GS_OPTIONS}
 
 public class GameManager : MonoBehaviour
 {
@@ -46,10 +46,14 @@ public class GameManager : MonoBehaviour
 
     public int lives = 3;
 
+    public Slider volumeSlider;
+
 
     public Canvas pauseMenuCanvas;
 
     public Canvas levelCompeletedCanvas;
+
+    public Canvas optionsCanvas;
 
     public static string keyHighScore = "HighScoreLevel1";
 
@@ -176,6 +180,9 @@ public class GameManager : MonoBehaviour
         if (currentGameState == GameState.GS_LEVELCOMPLETED) levelCompeletedCanvas.enabled = true;
         else levelCompeletedCanvas.enabled = false;
 
+        if (currentGameState == GameState.GS_OPTIONS) optionsCanvas.enabled = true;
+        else optionsCanvas.enabled = false;
+
         if (newGameState == GameState.GS_GAME) inGameCanvas.enabled=true;
         if (newGameState == GameState.GS_PASEMENU) inGameCanvas.enabled = false;  
         
@@ -216,6 +223,33 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         setGameState(GameState.GS_GAME_OVER);
+    }
+
+    public void Options()
+    {
+        setGameState(GameState.GS_OPTIONS);
+        Time.timeScale = 0.0f;
+    }
+
+    public void LeaveOptions()
+    {
+        setGameState(GameState.GS_GAME);
+        Time.timeScale = 1.0f;
+    }
+
+    public void IncreaseQuality()
+    {
+        QualitySettings.IncreaseLevel();
+    }
+
+    public void DecreaseQuality()
+    {
+        QualitySettings.DecreaseLevel();
+    }
+
+    public void SetVolume()
+    {
+        AudioListener.volume = volumeSlider.value;
     }
 
 

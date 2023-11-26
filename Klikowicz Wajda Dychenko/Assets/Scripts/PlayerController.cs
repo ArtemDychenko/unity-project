@@ -13,6 +13,23 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float jumpForce = 6.0f;
 
+    [SerializeField]
+    private AudioClip coinSound;
+
+    [SerializeField]
+    private AudioClip itemSound;
+
+    [SerializeField]
+    private AudioClip damageSound;
+
+    [SerializeField]
+    private AudioClip killSound;
+
+    [SerializeField]
+    private AudioClip healSound;
+
+    private AudioSource audioSource;
+
     private Rigidbody2D rigidBody;
 
     private Animator animator;
@@ -38,6 +55,7 @@ public class PlayerController : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody2D>();   
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         startPosition = transform.position;
     }
 
@@ -92,6 +110,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Bonus"))
         {
+            audioSource.PlayOneShot(coinSound, AudioListener.volume);
             GameManager.instance.AddPoints(1);
             other.gameObject.SetActive(false);
         }
@@ -100,10 +119,12 @@ public class PlayerController : MonoBehaviour
         {
             if (transform.position.y > other.gameObject.transform.position.y)
             {
+                audioSource.PlayOneShot(killSound, AudioListener.volume);
                 GameManager.instance.preyCounter++;
                 Debug.Log("Killed an enemy");
             }else
             {
+                audioSource.PlayOneShot(damageSound, AudioListener.volume);
                 Death();
                 
             }
@@ -119,12 +140,14 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("Key"))
         {
+            audioSource.PlayOneShot(itemSound, AudioListener.volume);
             GameManager.instance.AddKeys();
             other.gameObject.SetActive(false);
         }
 
         if (other.CompareTag("Heart"))
         {
+            audioSource.PlayOneShot(healSound, AudioListener.volume);
             GameManager.instance.AddLive();
             Debug.Log("Acquired live");
             other.gameObject.SetActive(false);
